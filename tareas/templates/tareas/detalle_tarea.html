@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for tarea in tareas %}
+      <div style="
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        width: 300px;
+        background: #f8f8f8;
+      ">
+        <h2>{{ tarea.titulo }}</h2>
+
+        <p><strong>Descripción:</strong><br>{{ tarea.descripcion }}</p>
+
+        <p><strong>Estado: </strong>
+          {% if tarea.completada %}
+            Completada
+          {% else %}
+            Pendiente
+          {% endif %}
+        </p>
+
+        <p><strong>Fecha creación:</strong> {{ tarea.fecha_creacion }}</p>
+        <p><strong>Recordatorio:</strong> {{ tarea.fecha_recordatorio }}</p>
+
+        
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
