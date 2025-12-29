@@ -28,6 +28,12 @@ class CrearTareaIndividualView(CreateView):
     model = TareaIndividual
     form_class = TareaIndividualForm
     template_name = 'tareas/crear_tarea_individual.html'
+    
+    #asignar al creador el usuario que la realiza
+    def form_valid(self, form):
+        form.instance.creador = self.request.user
+        return super().form_valid(form)
+    
     def get_success_url(self):
         return self.request.path
 
@@ -36,6 +42,7 @@ class CrearTareaGrupalView(CreateView):
     model = TareaGrupal
     form_class = TareaGrupalForm
     template_name = 'tareas/crear_tarea_grupal.html'
+
     def get_success_url(self):
         return self.request.path
 

@@ -34,6 +34,13 @@ class RegistroUsuarioForm(forms.ModelForm):
 
 # Formulario para la creación de una tarea individual (puede necesitar o no validación de un profesor)
 class TareaIndividualForm(forms.ModelForm):
+    #Solicitamos el creador de la tarea
+    creador = forms.ModelChoiceField(
+        queryset=Usuario.objects.all(), 
+        required=True,
+        label="Creador"
+    )
+
     class Meta:
         model = TareaIndividual
         fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumno']
@@ -49,6 +56,13 @@ class TareaIndividualForm(forms.ModelForm):
 
 #Formulario para la creación de una tarea grupal (puede necesitar o no validación de un profesor)
 class TareaGrupalForm(forms.ModelForm):
+    #Solicitamos el creador de la tarea
+    creador = forms.ModelChoiceField(
+        queryset=Usuario.objects.all(),  # tu modelo de usuario
+        required=True,
+        label="Creador"
+    )
+    
     class Meta:
         model = TareaGrupal
         fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumnos']
