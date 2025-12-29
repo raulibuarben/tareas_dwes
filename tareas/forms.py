@@ -43,7 +43,7 @@ class TareaIndividualForm(forms.ModelForm):
 
     class Meta:
         model = TareaIndividual
-        fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumno']
+        fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumno', 'creador']
         widgets = {
             'fecha_recordatorio': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
@@ -65,7 +65,7 @@ class TareaGrupalForm(forms.ModelForm):
     
     class Meta:
         model = TareaGrupal
-        fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumnos']
+        fields = ['titulo', 'descripcion', 'fecha_recordatorio', 'requiere_validacion', 'profesor', 'alumnos', 'creador']
         widgets = {
             'fecha_recordatorio': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }

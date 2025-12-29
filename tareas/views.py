@@ -3,9 +3,10 @@ from django.views.generic.detail import DetailView
 from .models import Tarea, TareaGrupal, TareaIndividual, Usuario
 from django.views.generic.edit import CreateView
 from .forms import RegistroUsuarioForm, TareaGrupalForm, TareaIndividualForm
-from django.urls import reverse_lazy
+from django.db.models import Q
 
 # Create your views here.
+
 #Detalle tarea.
 class detalle_tarea(DetailView):
     model = Tarea
@@ -28,11 +29,6 @@ class CrearTareaIndividualView(CreateView):
     model = TareaIndividual
     form_class = TareaIndividualForm
     template_name = 'tareas/crear_tarea_individual.html'
-    
-    #asignar al creador el usuario que la realiza
-    def form_valid(self, form):
-        form.instance.creador = self.request.user
-        return super().form_valid(form)
     
     def get_success_url(self):
         return self.request.path
@@ -57,4 +53,30 @@ def perfil_usuario(request, pk):
 def lista_usuarios(request):
     usuarios = Usuario.objects.all()
     return render(request, 'tareas/lista_usuarios.html', {'usuarios': usuarios})   
+
+
+#Vista de las tareas creadas o en las que participa el usuario aunque no las haya creado
+def lista_tareas_usuario(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    
+    tareas = Tarea.objects.filter(
+        Q(creador=usuario) | 
+        Q(profesor=usuario) | 
+        Q(tareaindividual__alumno=usuario) | 
+        Q(tareagrupal__alumnos=usuario)
+    ).distinct()
+    return render(request, 'tareas/lista_tareas_usuario.html', {'tareas': tareas, 'usuario': usuario})
+
+
+#Vista en la que un profesor necesita las tareas que requieren su validación
+def lista_tareas_validacion(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    
+    tareas_a_validar = Tarea.objects.filter(
+        Q(profesor=usuario) & 
+        (Q(tareaindividual__requiere_validacion=True) | Q(tareagrupal__requiere_validacion=True))
+    ).distinct()
+    
+    return render(request, 'tareas/lista_tareas_validacion.html', {'tareas': tareas_a_validar, 'usuario': usuario})
+
 
