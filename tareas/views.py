@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic.detail import DetailView
-from .models import Tarea, TareaGrupal, TareaIndividual
+from .models import Tarea, TareaGrupal, TareaIndividual, Usuario
 from django.views.generic.edit import CreateView
 from .forms import RegistroUsuarioForm, TareaGrupalForm, TareaIndividualForm
 from django.urls import reverse_lazy
@@ -18,18 +18,36 @@ class detalle_tarea(DetailView):
 class RegistroUsuarioView(CreateView):
     template_name = 'tareas/registro_usuario.html'
     form_class = RegistroUsuarioForm
-    success_url = reverse_lazy('login')
+
+    def get_success_url(self):
+        return self.request.path
+    
 
 #Vista para crear una tarea individual
 class CrearTareaIndividualView(CreateView):
     model = TareaIndividual
     form_class = TareaIndividualForm
     template_name = 'tareas/crear_tarea_individual.html'
-    success_url = reverse_lazy('lista_tareas')
+    def get_success_url(self):
+        return self.request.path
 
 #Vista para crear una tarea grupal
 class CrearTareaGrupalView(CreateView):
     model = TareaGrupal
     form_class = TareaGrupalForm
     template_name = 'tareas/crear_tarea_grupal.html'
-    success_url = reverse_lazy('lista_tareas')
+    def get_success_url(self):
+        return self.request.path
+
+
+#Vista en la que un usuario puede ver sus datos
+def perfil_usuario(request, pk):
+    usuario = get_object_or_404(Usuario, pk=pk)
+    return render(request, 'tareas/perfil_usuario.html', {'usuario': usuario})
+
+
+#Vista de alumnos y profesores
+def lista_usuarios(request):
+    usuarios = Usuario.objects.all()
+    return render(request, 'tareas/lista_usuarios.html', {'usuarios': usuarios})   
+

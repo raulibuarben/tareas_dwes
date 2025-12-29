@@ -22,10 +22,11 @@ class RegistroUsuarioForm(forms.ModelForm):
             raise forms.ValidationError(_("Las contraseñas no coinciden."))
         return p2
 
-    #Guarda el usuario con la contraseña hasheada
+    #Guarda el usuario con la contraseña hasheada y el rol seleccionado
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
+        user.rol = self.cleaned_data['rol']
         if commit:
             user.save()
         return user
